@@ -10,7 +10,7 @@ let missile = new Image();
 let airplaneX, airplaneY;
 let missileX, missileY;
 let missileFired = false;
-let soundEnabled = true;
+let soundEnabled = false;
 
 let speed = 5;
 let closeDistance = 50;
@@ -36,6 +36,10 @@ function resizeCanvas() {
 
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
+
+canvas.addEventListener("click", function(event) {
+    toggleSound();
+});
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -84,6 +88,10 @@ function update() {
 canvas.addEventListener("mousemove", function(event) {
     airplaneX = event.clientX - canvas.offsetLeft - 50;
     airplaneY = event.clientY - canvas.offsetTop - 50;
+});
+
+canvas.addEventListener("click", function(event) {
+  toggleSound();
 });
 
 canvas.addEventListener("contextmenu", function(event) {
