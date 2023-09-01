@@ -12,6 +12,8 @@ let missileX, missileY;
 let missileFired = false;
 let soundEnabled = true;
 
+airplaneSound.play();
+
 let speed = 5;
 let closeDistance = 50;  // Ajustado para a nova dimensão das imagens
 
