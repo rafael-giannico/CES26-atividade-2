@@ -49,7 +49,7 @@ function update() {
     ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);  // Tamanho fixo em 100x100 pixels
 
     let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = Math.PI / 2 + delta + Math.PI / 3;
+    let angleInRadians = delta + (Math.PI * 59) /180;
 
     if (missileFired) {
         if (missileY - airplaneY < 0) {
@@ -90,11 +90,13 @@ function update() {
 }
 
 canvas.addEventListener("mousemove", function(event) {
+    initializeSound();
     airplaneX = event.clientX - canvas.offsetLeft - 50;  // Ajustado para o novo tamanho da imagem
     airplaneY = event.clientY - canvas.offsetTop - 50;  // Ajustado para o novo tamanho da imagem
 });
 
 canvas.addEventListener("contextmenu", function(event) {
+    initializeSound();
     event.preventDefault();
     missileFired = true;
 });
