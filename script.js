@@ -6,6 +6,13 @@ let soundEnabled = true;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Load the airplane and missile images
+const airplaneImage = new Image();
+airplaneImage.src = 'aviao.png';
+
+const missileImage = new Image();
+missileImage.src = 'missil.png';
+
 let airplane = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -21,22 +28,20 @@ let missile = {
   fired: false,
 };
 
+let missileDistanceFromAirplane = 100; // Distância fixa do míssil ao avião
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw airplane
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(airplane.x, airplane.y, airplane.width, airplane.height);
+  // Draw airplane image
+  ctx.drawImage(airplaneImage, airplane.x, airplane.y, airplane.width, airplane.height);
 
-  // Draw missile
-  ctx.strokeStyle = 'red';
-  ctx.beginPath();
-  ctx.moveTo(missile.x, missile.y);
-  ctx.lineTo(
-    missile.x + Math.cos(missile.angle) * 20,
-    missile.y + Math.sin(missile.angle) * 20
-  );
-  ctx.stroke();
+  // Calculate the position of the missile relative to the airplane
+  let missileX = airplane.x + airplane.width / 2 + Math.cos(missile.angle) * missileDistanceFromAirplane;
+  let missileY = airplane.y + airplane.height / 2 + Math.sin(missile.angle) * missileDistanceFromAirplane;
+
+  // Draw missile image
+  ctx.drawImage(missileImage, missileX, missileY, 30, 30); // You can adjust the size (30, 30) as needed
 
   if (missile.fired) {
     missile.x += Math.cos(missile.angle) * missile.speed;
