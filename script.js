@@ -12,8 +12,6 @@ let missileX, missileY;
 let missileFired = false;
 let soundEnabled = true;
 
-airplaneSound.play();
-
 let speed = 5;
 let closeDistance = 50;  // Ajustado para a nova dimensão das imagens
 
@@ -49,7 +47,7 @@ function update() {
     ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);  // Tamanho fixo em 100x100 pixels
 
     let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = delta + (Math.PI * 59) /180;
+    let angleInRadians = Math.PI / 3 + delta;
 
     if (missileFired) {
         if (missileY - airplaneY < 0) {
