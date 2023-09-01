@@ -13,7 +13,7 @@ let missileFired = false;
 let soundEnabled = true;
 
 let speed = 5;
-let closeDistance = 50;
+let closeDistance = 25;  // Reduzido para coincidir com o tamanho menor do avião e do míssil
 
 airplane.src = "aviao.png";
 missile.src = "missil.png";
@@ -44,14 +44,14 @@ function update() {
         airplaneSound.play();
     }
 
-    ctx.drawImage(airplane, airplaneX, airplaneY);
+    ctx.drawImage(airplane, airplaneX, airplaneY, airplane.width * 0.75, airplane.height * 0.75);
 
     let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = -Math.PI / 2 + delta;
+    let angleInRadians = Math.PI / 2 + delta;  // Invertido para corrigir a orientação do míssil
 
     if (missileFired) {
         if (missileY - airplaneY < 0) {
-            angleInRadians += -Math.PI;
+            angleInRadians += Math.PI;
         }
 
         if (missileY - airplaneY < 0) {
@@ -81,15 +81,15 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -missile.width / 2, -missile.height / 2);
+    ctx.drawImage(missile, -missile.width * 0.375, -missile.height * 0.375, missile.width * 0.75, missile.height * 0.75);  // Reduzido em 75%
     ctx.restore();
 
     requestAnimationFrame(update);
 }
 
 canvas.addEventListener("mousemove", function(event) {
-    airplaneX = event.clientX - canvas.offsetLeft - airplane.width / 2;
-    airplaneY = event.clientY - canvas.offsetTop - airplane.height / 2;
+    airplaneX = event.clientX - canvas.offsetLeft - (airplane.width * 0.75) / 2;
+    airplaneY = event.clientY - canvas.offsetTop - (airplane.height * 0.75) / 2;
 });
 
 canvas.addEventListener("contextmenu", function(event) {
