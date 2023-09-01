@@ -49,7 +49,7 @@ function update() {
     ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);  // Tamanho fixo em 100x100 pixels
 
     let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = Math.PI / 2 + delta;
+    let angleInRadians = Math.PI / 2 + delta + Math.PI / 3;
 
     if (missileFired) {
         if (missileY - airplaneY < 0) {
