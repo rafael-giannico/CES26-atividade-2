@@ -113,7 +113,6 @@ canvas.addEventListener("contextmenu", function(event) {
 
 
 // Toggle sound on/off
-let soundEnabled = true;
 document.addEventListener('keydown', function(event) {
     if (event.code === 'KeyM') {
         soundEnabled = !soundEnabled;
