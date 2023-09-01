@@ -29,6 +29,15 @@ function toggleSound() {
     }
 }
 
+function initializeSound() {
+  if (!soundInitialized) {
+      soundInitialized = true;
+      if (soundEnabled) {
+          airplaneSound.play();
+      }
+  }
+}
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
