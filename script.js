@@ -29,15 +29,6 @@ function toggleSound() {
     }
 }
 
-function initializeSound() {
-  if (!soundInitialized) {
-      soundInitialized = true;
-      if (soundEnabled) {
-          airplaneSound.play();
-      }
-  }
-}
-
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -99,13 +90,11 @@ function update() {
 }
 
 canvas.addEventListener("mousemove", function(event) {
-    initializeSound();
     airplaneX = event.clientX - canvas.offsetLeft - 50;  // Ajustado para o novo tamanho da imagem
     airplaneY = event.clientY - canvas.offsetTop - 50;  // Ajustado para o novo tamanho da imagem
 });
 
 canvas.addEventListener("contextmenu", function(event) {
-    initializeSound();
     event.preventDefault();
     missileFired = true;
 });
