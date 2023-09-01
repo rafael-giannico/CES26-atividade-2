@@ -13,7 +13,7 @@ let missileFired = false;
 let soundEnabled = true;
 
 let speed = 5;
-let closeDistance = 25;  // Reduzido para coincidir com o tamanho menor do avião e do míssil
+let closeDistance = 20;  // Reduzido para coincidir com o tamanho ainda menor do avião e do míssil
 
 airplane.src = "aviao.png";
 missile.src = "missil.png";
@@ -44,12 +44,15 @@ function update() {
         airplaneSound.play();
     }
 
-    ctx.drawImage(airplane, airplaneX, airplaneY, airplane.width * 0.75, airplane.height * 0.75);
+    ctx.drawImage(airplane, airplaneX, airplaneY, airplane.width * 0.5, airplane.height * 0.5);
 
     let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = Math.PI / 2 + delta;  // Invertido para corrigir a orientação do míssil
+    let angleInRadians = Math.PI / 2 + delta;
 
     if (missileFired) {
+        let tipX = missileX + (missile.width * 0.5 * 0.5) * Math.sin(angleInRadians);  // Consider the tip of the missile
+        let tipY = missileY - (missile.height * 0.5 * 0.5) * Math.cos(angleInRadians); // Consider the tip of the missile
+
         if (missileY - airplaneY < 0) {
             angleInRadians += Math.PI;
         }
@@ -62,7 +65,7 @@ function update() {
             missileY -= speed * Math.cos(delta);
         }
 
-        let distance = Math.sqrt(Math.pow(airplaneX - missileX, 2) + Math.pow(airplaneY - missileY, 2));
+        let distance = Math.sqrt(Math.pow(airplaneX - tipX, 2) + Math.pow(airplaneY - tipY, 2));
 
         if (distance < closeDistance) {
             if (soundEnabled) {
@@ -81,15 +84,15 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -missile.width * 0.375, -missile.height * 0.375, missile.width * 0.75, missile.height * 0.75);  // Reduzido em 75%
+    ctx.drawImage(missile, -missile.width * 0.25, -missile.height * 0.25, missile.width * 0.5, missile.height * 0.5);
     ctx.restore();
 
     requestAnimationFrame(update);
 }
 
 canvas.addEventListener("mousemove", function(event) {
-    airplaneX = event.clientX - canvas.offsetLeft - (airplane.width * 0.75) / 2;
-    airplaneY = event.clientY - canvas.offsetTop - (airplane.height * 0.75) / 2;
+    airplaneX = event.clientX - canvas.offsetLeft - (airplane.width * 0.5) / 2;
+    airplaneY = event.clientY - canvas.offsetTop - (airplane.height * 0.5) / 2;
 });
 
 canvas.addEventListener("contextmenu", function(event) {
