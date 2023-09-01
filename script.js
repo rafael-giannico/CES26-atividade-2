@@ -99,3 +99,31 @@ canvas.addEventListener('mousemove', onMouseMove);
 canvas.addEventListener('mousedown', onMouseClick);
 
 draw();
+
+// Right-click to fire the missile
+canvas.addEventListener("contextmenu", function(event) {
+    event.preventDefault();
+    audioEmg.play();
+    if (!fire) {
+        missile.src = 'assets/missile-hot.png';
+        audioPlane.pause();
+    }
+    fire = true;
+});
+
+
+// Toggle sound on/off
+let soundEnabled = true;
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'KeyM') {
+        soundEnabled = !soundEnabled;
+        if (soundEnabled) {
+            audioPlane.play();
+        } else {
+            audioPlane.pause();
+            audioBomb.pause();
+            audioVouCair.pause();
+            audioEmg.pause();
+        }
+    }
+});
