@@ -1,94 +1,121 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-const airplaneSound = document.getElementById("airplaneSound");
-const explosionSound = document.getElementById("explosionSound");
-
-let airplane = new Image();
-let missile = new Image();
-
-let airplaneX, airplaneY;
-let missileX, missileY;
-let missileFired = false;
-let soundEnabled = true;
-
+let mouseX = 0;
+let mouseY = 0;
 let speed = 5;
-let closeDistance = 50;
+let closeDistance = 20;
+let fire = false;
+let catched = false;
+const canvas = document.getElementsByTagName('canvas')[0];
+const ctx = canvas.getContext('2d');
 
-airplane.src = "aviao.png";
-missile.src = "missil.png";
+let hold_x;
+let hold_y;
 
-function toggleSound() {
-    soundEnabled = !soundEnabled;
-    if (soundEnabled) {
-        airplaneSound.play();
-    } else {
-        airplaneSound.pause();
-    }
-}
+const audioPlane = document.getElementById('plane');
+const audioBomb = document.getElementById('bomb');
+
+audioPlane.addEventListener('ended', () => {
+    audioPlane.play();
+});
+
+audioPlane.onload = audioPlane.play;
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    missileX = canvas.width / 2;
-    missileY = canvas.height - 50;
+    hold_x = canvas.width/2 - 75;
+    hold_y = canvas.height - 90;
 }
 
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
+
 resizeCanvas();
+const plane = new Image();
+const missile = new Image();
 
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+plane.src = 'aviao.png';
+missile.src = 'missil.png';
 
-    if (soundEnabled && !airplaneSound.paused) {
-        airplaneSound.play();
+
+function drawPlane() {
+    if(!catched){
+        ctx.drawImage(plane, mouseX - 75, mouseY - (50), 150, 100);
     }
+    else {
+        ctx.drawImage(plane, hold_x - 75, hold_y - 50, 150, 100);
+        if(hold_y < canvas.height + 100) hold_y += 2;
+        else {
+            catched = false;
+            fire = false;
+            missile.src = 'missil.png';
+            plane.src = 'aviao.png';
+            resizeCanvas()
+            audioPlane.play();    
+        }
 
-    ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);
+    }
+}
 
-    let deltaX = airplaneX + 50 - missileX;
-    let deltaY = airplaneY + 50 - missileY;
-    let angleInRadians = Math.atan2(deltaY, deltaX);
+function drawMissile() {
+    delta = Math.atan((mouseX - hold_x)/(hold_y - mouseY));
+    const angleInDegrees = -90;
+    var angleInRadians = angleInDegrees * (Math.PI / 180) + delta;
 
-    if (missileFired) {
-        missileX += speed * Math.cos(angleInRadians);
-        missileY += speed * Math.sin(angleInRadians);
+    if(hold_y - mouseY < 0) angleInRadians += -Math.PI;
 
-        if (
-            airplaneX < missileX + 100 &&
-            airplaneX + 100 > missileX &&
-            airplaneY < missileY + 100 &&
-            airplaneY + 100 > missileY
-        ) {
-            if (soundEnabled) {
-                explosionSound.play();
-            }
-
-            missileFired = false;
-            missileX = canvas.width / 2;
-            missileY = canvas.height - 50;
-            airplaneX = canvas.width / 2;
-            airplaneY = 50;
+    if(fire) {
+        if(hold_y - mouseY < 0) {
+            hold_x -= speed * Math.sin(delta);
+            hold_y += speed * Math.cos(delta);
+        }
+        else {
+            hold_x += speed * Math.sin(delta);
+            hold_y -= speed * Math.cos(delta);
+        }
+        if(hold_x > canvas.width || hold_x < 0 || hold_y > canvas.height || hold_y < 0) {
+            hold_x = canvas.width/2 - 75;
+            hold_y = canvas.height - 70;
+            fire = false;
         }
     }
 
     ctx.save();
-    ctx.translate(missileX, missileY);
+    ctx.translate(hold_x, hold_y);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -50, -50, 100, 100);
+    ctx.drawImage(missile, -75, -50, 150, 100);
     ctx.restore();
-
-    requestAnimationFrame(update);
 }
 
+plane.addEventListener('load', () => drawPlane(plane));
+missile.addEventListener('load', () => drawMissile(missile));
+
 canvas.addEventListener("mousemove", function(event) {
-    airplaneX = event.clientX - canvas.offsetLeft - 50;
-    airplaneY = event.clientY - canvas.offsetTop - 50;
+    mouseX = event.clientX - canvas.offsetLeft;
+    mouseY = event.clientY - canvas.offsetTop; 
 });
+
+
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawPlane(plane);
+    if(!fire || !catched) {
+        drawMissile(missile);
+    }
+
+    if(fire && !catched) {
+        if(Math.abs(hold_x - mouseX) < closeDistance && Math.abs(hold_y - mouseY) < closeDistance) {
+            catched = true;
+            audioBomb.play();
+            }
+    }
+
+    requestAnimationFrame(update);
+};
+
+requestAnimationFrame(update);
+
 
 canvas.addEventListener("contextmenu", function(event) {
-    event.preventDefault();
-    missileFired = true;
+  event.preventDefault();
+  missileFired = true;
 });
-
-update();
