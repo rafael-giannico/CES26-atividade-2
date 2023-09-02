@@ -10,7 +10,6 @@ let missile = new Image();
 let airplaneX, airplaneY;
 let missileX, missileY;
 let missileFired = false;
-let soundEnabled = false;
 
 let speed = 5;
 let closeDistance = 50;
@@ -18,12 +17,15 @@ let closeDistance = 50;
 airplane.src = "aviao.png";
 missile.src = "missil.png";
 
-function toggleSound() {
-    soundEnabled = !soundEnabled;
-    if (soundEnabled) {
+// Iniciar o áudio do avião após o primeiro movimento do mouse
+let audioStarted = false;
+function startAudio() {
+    if (!audioStarted) {
         airplaneSound.play();
-    } else {
-        airplaneSound.pause();
+        airplaneSound.addEventListener('ended', () => {
+            airplaneSound.play();
+        });
+        audioStarted = true;
     }
 }
 
@@ -36,6 +38,18 @@ function resizeCanvas() {
 
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
+
+canvas.addEventListener("mousemove", function(event) {
+    startAudio();
+    airplaneX = event.clientX - canvas.offsetLeft - 50;
+    airplaneY = event.clientY - canvas.offsetTop - 50;
+});
+
+canvas.addEventListener("contextmenu", function(event) {
+    event.preventDefault();
+    missileFired = true;
+    explosionSound.play();
+});
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
