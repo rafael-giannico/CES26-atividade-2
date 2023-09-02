@@ -37,10 +37,6 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-canvas.addEventListener("click", function(event) {
-    toggleSound();
-});
-
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
