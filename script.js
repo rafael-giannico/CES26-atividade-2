@@ -48,7 +48,7 @@ function update() {
 
     let deltaX = airplaneX + 50 - missileX;
     let deltaY = airplaneY + 50 - missileY;
-    let angleInRadians = (Math.PI * 5)/3 +  Math.atan2(deltaY, deltaX);
+    let angleInRadians = Math.atan2(deltaY, deltaX);
 
     if (missileFired) {
         missileX += speed * Math.cos(angleInRadians);
@@ -75,7 +75,7 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, 0, 0, 150, 150);
+    ctx.drawImage(missile, -50, -50 -100, 150, 150);
     ctx.restore();
 
     requestAnimationFrame(update);
