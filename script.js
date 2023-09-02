@@ -31,7 +31,7 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     missileX = canvas.width / 2;
-    missileY = canvas.height + 50;
+    missileY = canvas.height + 100;
 }
 
 window.addEventListener("resize", resizeCanvas);
