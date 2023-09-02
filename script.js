@@ -48,7 +48,7 @@ function update() {
 
     let deltaX = airplaneX + 50 - missileX;
     let deltaY = airplaneY + 50 - missileY;
-    let angleInRadians = Math.atan2(deltaY, deltaX);
+    let angleInRadians = Math.PI/3 +  Math.atan2(deltaY, deltaX);
 
     if (missileFired) {
         missileX += speed * Math.cos(angleInRadians);
