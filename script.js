@@ -1,6 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const airplaneSound = document.getElementById("airplaneSound");
 const explosionSound = document.getElementById("explosionSound");
 
 let airplane = new Image();
@@ -17,6 +18,15 @@ let closeDistance = 50;
 airplane.src = "aviao.png";
 missile.src = "missil.png";
 
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    if (soundEnabled) {
+        airplaneSound.play();
+    } else {
+        airplaneSound.pause();
+    }
+}
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -30,14 +40,19 @@ resizeCanvas();
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if (soundEnabled && !airplaneSound.paused) {
+        airplaneSound.play();
+    }
+
     ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);
 
-    let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
-    let angleInRadians = Math.PI / 2 + delta;
+    let deltaX = airplaneX + 50 - missileX;
+    let deltaY = airplaneY + 50 - missileY;
+    let angleInRadians = Math.atan2(deltaY, deltaX);
 
     if (missileFired) {
-        missileX += speed * Math.cos(delta);
-        missileY += speed * Math.sin(delta);
+        missileX += speed * Math.cos(angleInRadians);
+        missileY += speed * Math.sin(angleInRadians);
 
         if (
             airplaneX < missileX + 100 &&
@@ -56,7 +71,6 @@ function update() {
             airplaneY = 50;
         }
     }
-
 
     ctx.save();
     ctx.translate(missileX, missileY);
