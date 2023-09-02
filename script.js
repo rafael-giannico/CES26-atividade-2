@@ -31,7 +31,7 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     missileX = canvas.width / 2;
-    missileY = canvas.height - 50;
+    missileY = canvas.height + 50;
 }
 
 window.addEventListener("resize", resizeCanvas);
@@ -75,7 +75,7 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians + (Math.PI * 5)/6);
-    ctx.drawImage(missile, -50, -50 -150, 100, 100);
+    ctx.drawImage(missile, -50, -50, 100, 100);
     ctx.restore();
 
     requestAnimationFrame(update);
