@@ -13,7 +13,7 @@ let missileFired = false;
 let soundEnabled = true;
 
 let speed = 5;
-let closeDistance = 50;
+let closeDistance = 50;  // Ajustado para a nova dimensão das imagens
 
 airplane.src = "aviao.png";
 missile.src = "missil.png";
@@ -44,22 +44,27 @@ function update() {
         airplaneSound.play();
     }
 
-    ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);
+    ctx.drawImage(airplane, airplaneX, airplaneY, 100, 100);  // Tamanho fixo em 100x100 pixels
 
-    let deltaX = airplaneX + 50 - missileX;
-    let deltaY = airplaneY + 50 - missileY;
-    let angleInRadians = Math.atan2(deltaY, deltaX);
+    let delta = Math.atan((airplaneX - missileX) / (missileY - airplaneY));
+    let angleInRadians = Math.PI / 2 + delta;
 
     if (missileFired) {
-        missileX += speed * Math.cos(angleInRadians);
-        missileY += speed * Math.sin(angleInRadians);
+        if (missileY - airplaneY < 0) {
+            angleInRadians += Math.PI;
+        }
 
-        if (
-            airplaneX < missileX + 100 &&
-            airplaneX + 100 > missileX &&
-            airplaneY < missileY + 100 &&
-            airplaneY + 100 > missileY
-        ) {
+        if (missileY - airplaneY < 0) {
+            missileX -= speed * Math.sin(delta);
+            missileY += speed * Math.cos(delta);
+        } else {
+            missileX += speed * Math.sin(delta);
+            missileY -= speed * Math.cos(delta);
+        }
+
+        let distance = Math.sqrt(Math.pow(airplaneX + 50 - missileX, 2) + Math.pow(airplaneY + 50 - missileY, 2));
+
+        if (distance < closeDistance) {
             if (soundEnabled) {
                 explosionSound.play();
             }
@@ -75,7 +80,7 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -50, -50 -100, 150, 150);
+    ctx.drawImage(missile, -50, -50, 150, 150);
     ctx.restore();
 
     requestAnimationFrame(update);
