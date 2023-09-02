@@ -74,7 +74,7 @@ function update() {
 
     ctx.save();
     ctx.translate(missileX, missileY);
-    ctx.rotate(angleInRadians + (Math.PI * 5)/3);
+    ctx.rotate(angleInRadians + Math.PI);
     ctx.drawImage(missile, -50, -50, 100, 100);
     ctx.restore();
 
