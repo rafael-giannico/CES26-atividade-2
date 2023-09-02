@@ -37,11 +37,6 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-window.addEventListener('load', function() {
-  airplaneSound.play();
-});
-
-
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -80,7 +75,7 @@ function update() {
     ctx.save();
     ctx.translate(missileX, missileY);
     ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -50, -50, 100, 100);
+    ctx.drawImage(missile, 0, 0, 150, 150);
     ctx.restore();
 
     requestAnimationFrame(update);
